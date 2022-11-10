@@ -3,14 +3,14 @@ eclipse.project.name = "gdx-gltf"
 dependencies {
     api "com.badlogicgames.gdx:gdx:$gdxVersion"
     
-    testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     testImplementation "junit:junit:$junitVersion"
 }
 
-sourceCompatibility = 1.7
-sourceSets.main.java.srcDirs = [ "src" ]
-sourceSets.main.resources.srcDirs = ["src"]
+//sourceCompatibility = 1.7
+sourceSets.main.java.srcDirs = [ "src", "../ibl-composer/src" ]
+sourceSets.main.resources.srcDirs = ["src", "../ibl-composer/src"]
 sourceSets.test.java.srcDirs = [ "test" ]
 sourceSets.test.resources.srcDirs = ["testRes"]
 
