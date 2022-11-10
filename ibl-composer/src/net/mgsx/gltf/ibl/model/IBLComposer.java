@@ -58,6 +58,32 @@ public class IBLComposer implements Disposable {
 		}
 	}
 
+	/** @param file the file to load
+	 * @param flipV set true to flip the hdr image verically */
+	public void loadHDR(FileHandle file, boolean flipV) throws IOException {
+		loadHDR(file);
+
+		if (flipV) {
+			final int h = hdrHeader.getHeight();
+			final int w = hdrHeader.getWidth();
+
+			int scanlineBytes = w * 4;
+			byte[] pixrow = new byte[scanlineBytes];
+
+			// flip the image vertically (extra-fast, uses only one scanline buffer)
+			for (int i = 0; i < (h / 2); i++) {
+				// copy top to scanline
+				System.arraycopy(hdrData, i * scanlineBytes, pixrow, 0, scanlineBytes);
+
+				// copy bottom to top
+				System.arraycopy(hdrData, (h - i - 1) * scanlineBytes, hdrData, i * scanlineBytes, scanlineBytes);
+
+				// copy scanline to bottom
+				System.arraycopy(pixrow, 0, hdrData, (h - i - 1) * scanlineBytes, scanlineBytes);
+			}
+		}
+	}
+
 	@Override
 	public void dispose() {
 		if(pixmapRaw != null) pixmapRaw.dispose();
