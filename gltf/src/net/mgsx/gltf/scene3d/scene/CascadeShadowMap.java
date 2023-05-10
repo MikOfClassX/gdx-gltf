@@ -21,7 +21,7 @@ public class CascadeShadowMap implements Disposable {
 
 	public final Array<DirectionalShadowLight> lights;
 	protected final int cascadeCount;
-	protected static final Vector3 v = new Vector3();
+	protected final Vector3 v = new Vector3();
 
 	public final CascadeShadowMapAttribute attribute;
 	
