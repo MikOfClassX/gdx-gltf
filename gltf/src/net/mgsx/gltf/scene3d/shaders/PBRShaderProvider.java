@@ -33,6 +33,7 @@ import net.mgsx.gltf.scene3d.attributes.PBRMatrixAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRVertexAttributes;
 import net.mgsx.gltf.scene3d.attributes.PBRVolumeAttribute;
+import net.mgsx.gltf.scene3d.attributes.ShadowCatchAttribute;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig.SRGB;
 import net.mgsx.gltf.scene3d.utils.LightUtils;
 import net.mgsx.gltf.scene3d.utils.LightUtils.LightsInfo;
@@ -266,6 +267,11 @@ public class PBRShaderProvider extends DefaultShaderProvider
 			CascadeShadowMapAttribute csm = renderable.environment.get(CascadeShadowMapAttribute.class, CascadeShadowMapAttribute.Type);
 			if(csm != null){
 				prefix += "#define numCSM " + csm.cascadeShadowMap.lights.size + "\n";
+			}
+			
+			// shadow catch surface 
+			if(renderable.material.has(ShadowCatchAttribute.Type)){
+				prefix += "#define shadowCatchFlag\n";
 			}
 			
 			// IBL options
