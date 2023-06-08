@@ -1,6 +1,6 @@
 package net.mgsx.gltf.scene3d.scene;
 
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -291,7 +291,7 @@ public class SceneManager implements Disposable {
 	public void renderShadows(){
 		DirectionalShadowLight shadowLight = getFirstDirectionalShadowLight();
 		if(shadowLight != null){
-			shadowLight.begin();
+			shadowLight.begin(camera);
 			renderDepth(shadowLight.getCamera());
 			shadowLight.end();
 			
@@ -303,7 +303,7 @@ public class SceneManager implements Disposable {
 		
 		if(cascadeShadowMap != null){
 			for(DirectionalShadowLight light : cascadeShadowMap.lights){
-				light.begin();
+				light.begin(camera);
 				renderDepth(light.getCamera());
 				light.end();
 			}

@@ -95,7 +95,7 @@ public class DirectionalShadowLight extends DirectionalLightEx implements Shadow
 		return setViewport(w, h, 0, d);
 	}
 	
-	protected void validate(){
+	protected void validate(Camera sceneCamera){
 		float halfDepth = cam.near + 0.5f * (cam.far - cam.near);
 		cam.position.set(direction).scl(-halfDepth).add(center);
 		cam.direction.set(direction).nor();
@@ -103,8 +103,8 @@ public class DirectionalShadowLight extends DirectionalLightEx implements Shadow
 		cam.update();
 	}
 	
-	public void begin() {
-		validate();
+	public void begin(Camera sceneCamera) {
+		validate(sceneCamera);
 		final int w = fbo.getWidth();
 		final int h = fbo.getHeight();
 		fbo.begin();
