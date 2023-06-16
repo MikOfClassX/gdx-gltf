@@ -3,6 +3,9 @@
  */
 package net.mgsx.gltf.scene3d.scene;
 
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.utils.*;
+
 import net.mgsx.gltf.scene3d.lights.*;
 
 /**
@@ -38,57 +41,65 @@ public class CascadeShadowMapExt extends CascadeShadowMap {
 		}
 	}
 	
-	/**
-	 * @param base
-	 */
-	public void setCascade (DirectionalShadowLightExt base) {
-		setCascade(base, 0);
-	}
-
 	/*
-	 * @see net.mgsx.gltf.scene3d.scene.CascadeShadowMap#setCascade(net.mgsx.gltf.scene3d.lights.DirectionalShadowLight, float)
+	 * @see net.mgsx.gltf.scene3d.scene.CascadeShadowMap#setCascades(com.badlogic.gdx.graphics.Camera, net.mgsx.gltf.scene3d.lights.DirectionalShadowLight, float, float)
 	 */
 	@Override
-	public void setCascade (DirectionalShadowLight base, float downscale) {
-			int w = base.getFrameBuffer().getWidth();
-			int h = base.getFrameBuffer().getHeight();
-			for (int i = 0; i < cascadeCount; i++)
-			{
-				if (i < lights.size)
-				{
-					DirectionalShadowLight light = lights.get(i);
-					if (light.getFrameBuffer().getWidth() != w ||
-							light.getFrameBuffer().getHeight() != h)
-					{
-						light.dispose();
-						lights.set(i, createLight(w, h));
-					}
-				}
-				else
-				{
-					lights.add(createLight(w, h));
-				}
-			}
-
-			DirectionalShadowLightExt baseExt = (DirectionalShadowLightExt) base;
-			// compute cascade split around base light near/far
-			computeCascadeSplit(baseExt.getShadowNear(), baseExt.getShadowFar());
-
-			// reverse order : first is the max LOD.
-			for (int i = lights.size - 1; i >= 0; i--)
-			{
-				DirectionalShadowLightExt light = (DirectionalShadowLightExt) lights.get(i);
-				light.baseColor.set(base.baseColor);
-				light.color.set(base.baseColor);
-				light.direction.set(base.direction);
-
-				final CascadeSplit cascadeSplit = cascadeSplits[i];
-				light.setShadowNear(cascadeSplit.near);
-				light.setShadowFar(cascadeSplit.far);
-				light.setZFrustumScale(baseExt.getZFrustumScale());
-			}
+	public void setCascades (Camera sceneCamera, DirectionalShadowLight base, float minLlightDepth, float splitDivisor){
+		setCascade((DirectionalShadowLightExt) base);
 	}
+	
+	/*
+	 * @see net.mgsx.gltf.scene3d.scene.CascadeShadowMap#setCascades(com.badlogic.gdx.graphics.Camera, net.mgsx.gltf.scene3d.lights.DirectionalShadowLight, float, com.badlogic.gdx.utils.FloatArray)
+	 */
+	@Override
+	public void setCascades (Camera sceneCamera, DirectionalShadowLight base, float minLlightDepth, FloatArray splitRates) {
+		setCascade((DirectionalShadowLightExt) base);
+	}
+	
+	/**
+	 * @param base base shadowlight ext
+	 */
+	public void setCascade (DirectionalShadowLightExt base) {
+		int w = base.getFrameBuffer().getWidth();
+		int h = base.getFrameBuffer().getHeight();
+		for (int i = 0; i < cascadeCount; i++)
+		{
+			if (i < lights.size)
+			{
+				DirectionalShadowLight light = lights.get(i);
+				if (light.getFrameBuffer().getWidth() != w ||
+						light.getFrameBuffer().getHeight() != h)
+				{
+					light.dispose();
+					lights.set(i, createLight(w, h));
+				}
+			}
+			else
+			{
+				lights.add(createLight(w, h));
+			}
+		}
 
+		DirectionalShadowLightExt baseExt = (DirectionalShadowLightExt) base;
+		// compute cascade split around base light near/far
+		computeCascadeSplit(baseExt.getShadowNear(), baseExt.getShadowFar());
+
+		// reverse order : first is the max LOD.
+		for (int i = lights.size - 1; i >= 0; i--)
+		{
+			DirectionalShadowLightExt light = (DirectionalShadowLightExt) lights.get(i);
+			light.baseColor.set(base.baseColor);
+			light.color.set(base.baseColor);
+			light.direction.set(base.direction);
+
+			final CascadeSplit cascadeSplit = cascadeSplits[i];
+			light.setShadowNear(cascadeSplit.near);
+			light.setShadowFar(cascadeSplit.far);
+			light.setZFrustumScale(baseExt.getZFrustumScale());
+		}
+	}
+	
 	/**
 	 * Compute the cascade split around near far planes
 	 * 
