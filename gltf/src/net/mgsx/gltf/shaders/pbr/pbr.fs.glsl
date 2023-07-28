@@ -46,9 +46,6 @@ void main() {
 
 void main() {
 
-#if defined(shadowCatchFlag) && defined(shadowMapFlag)
-out_FragColor = vec4(0.0, 0.0, 0.0, getBaseColor().a * (1.0 - getShadow()));
-#else	
     // Metallic and Roughness material properties are packed together
     // In glTF, these factors can be specified by fixed scalar values
     // or from a metallic-roughness map
@@ -266,10 +263,8 @@ out_FragColor = vec4(0.0, 0.0, 0.0, getBaseColor().a * (1.0 - getShadow()));
 #else
 	out_FragColor.a = 1.0;
 #endif
-#endif
 
 	applyClippingPlane();
-
 }
 
 #endif
