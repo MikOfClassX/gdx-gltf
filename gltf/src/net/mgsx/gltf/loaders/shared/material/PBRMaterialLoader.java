@@ -121,7 +121,9 @@ public class PBRMaterialLoader extends MaterialLoaderBase {
 						material.set(getTexureMap(PBRTextureAttribute.Diffuse, ext.diffuseTexture));
 					}
 					if(ext.specularGlossinessTexture != null){
-						material.set(getTexureMap(PBRTextureAttribute.Specular, ext.specularGlossinessTexture));
+						// ClassX: clash with specular color texture, see https://github.com/mgsx-dev/gdx-gltf/issues/113
+						// by commenting this line we load the specularGlossiness without crashing (i.e. SpecGlossVsMetalRough.glb) 
+						//material.set(getTexureMap(PBRTextureAttribute.Specular, ext.specularGlossinessTexture));
 					}
 				}
 			}
