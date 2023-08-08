@@ -241,6 +241,14 @@ public class MeshLoader {
 								normalMapUVs = VertexAttribute.Normal();
 							}
 						}
+						else {
+							// add default tangent in order to attach normal texture dynamically
+							vertexAttributes.add(new VertexAttribute(Usage.Tangent, 4, ShaderProgram.TANGENT_ATTRIBUTE));
+							computeTangents = true;
+							
+							// add default normal 
+							normalMapUVs = VertexAttribute.Normal();
+						}
 					}
 				}
 				
