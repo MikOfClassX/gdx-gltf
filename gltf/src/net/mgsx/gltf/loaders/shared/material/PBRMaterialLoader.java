@@ -112,13 +112,23 @@ public class PBRMaterialLoader extends MaterialLoaderBase {
 				if(ext != null){
 					Gdx.app.error("GLTF", KHRMaterialsPBRSpecularGlossiness.EXT + " extension is deprecated by glTF 2.0 specification and not fully supported.");
 					
-					material.set(new ColorAttribute(ColorAttribute.Diffuse, GLTFTypes.mapColor(ext.diffuseFactor, Color.WHITE)));
-					material.set(new ColorAttribute(ColorAttribute.Specular, GLTFTypes.mapColor(ext.specularFactor, Color.WHITE)));
+					// ClassX: use diffuse color as PBR base color factor
+					material.set(PBRColorAttribute.createBaseColorFactor(GLTFTypes.mapColor(ext.diffuseFactor, Color.WHITE)));
+					// material.set(new ColorAttribute(ColorAttribute.Diffuse, GLTFTypes.mapColor(ext.diffuseFactor, Color.WHITE)));
+
+					// never use specular attribute here: avoid crash when applying a PBR specular attribute
+					// material.set(new ColorAttribute(ColorAttribute.Specular, GLTFTypes.mapColor(ext.specularFactor, Color.WHITE)));
 					
+					// set default metallic/roughness
+					material.set(PBRFloatAttribute.createMetallic(1));
+					material.set(PBRFloatAttribute.createRoughness(1));
+
 					// not sure how to map normalized gloss to exponent ...
 					material.set(new FloatAttribute(FloatAttribute.Shininess, MathUtils.lerp(1, 100, ext.glossinessFactor)));
 					if(ext.diffuseTexture != null){
-						material.set(getTexureMap(PBRTextureAttribute.Diffuse, ext.diffuseTexture));
+						// ClassX: use diffuse texture as PBR base color texture
+						material.set(getTexureMap(PBRTextureAttribute.BaseColorTexture, ext.diffuseTexture));
+						// material.set(getTexureMap(PBRTextureAttribute.Diffuse, ext.diffuseTexture));
 					}
 					if(ext.specularGlossinessTexture != null){
 						// ClassX: clash with specular color texture, see https://github.com/mgsx-dev/gdx-gltf/issues/113
