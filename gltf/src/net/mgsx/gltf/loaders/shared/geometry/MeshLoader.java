@@ -224,7 +224,8 @@ public class MeshLoader {
 						glAccessors.add(null);
 						computeNormals = true;
 					}
-					if(!hasTangent){
+					// cannot compute tangent space with invalid indices (avoid npe)
+					if (!hasTangent && primitive.indices != null){
 						// tangent is only needed when normal map is used
 						PBRTextureAttribute normalMap = material.get(PBRTextureAttribute.class, PBRTextureAttribute.NormalTexture);
 						if(normalMap != null){
