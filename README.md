@@ -1,3 +1,22 @@
+# About this fork
+
+This fork is based on the valuable original GDX-GLTF with the aim to:
+
+* Maintain full code-level, api/binary compatibility with the original repo
+* Contribute to the original GDX-GLTF with quality code, improvements
+* Implement new features and fixes that are not finding (or never find) their place in the original repo
+* Extend GLTF support
+
+# What's new here ?
+
+* GLTF loading consolidation. GLTF loader is more tolerant and loads models not supported in the original repo
+* Fix of concurrency issues. The lib is now safe when used from multiple threads
+* Cleaner and accurate CSM implementation
+* New transparent shadow catcher surface
+* Fix of resource leaks
+* New support for dynamic normal textures
+* Fix for unreleased streams
+* (more to come: feel free to PR!)
 
 [![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat)](https://github.com/KhronosGroup/glTF) [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/badge/semver-2.0-brightgreen)](https://semver.org/) [![Release](https://jitpack.io/v/mgsx-dev/gdx-gltf.svg)](https://jitpack.io/#mgsx-dev/gdx-gltf) [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/mgsx-dev/gdx-gltf?include_prereleases&sort=semver)](https://github.com/mgsx-dev/gdx-gltf/releases)
 
