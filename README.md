@@ -16,6 +16,7 @@ This fork is based on the valuable original GDX-GLTF with the aim to:
 * Fix of resource leaks
 * New support for dynamic normal textures
 * Fix for unreleased streams
+* Support for gltf sparse accessors (thanks to @nullEuro)
 * (more to come: feel free to PR!)
 
 [![status](https://img.shields.io/badge/glTF-2%2E0-green.svg?style=flat)](https://github.com/KhronosGroup/glTF) [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/badge/semver-2.0-brightgreen)](https://semver.org/) [![Release](https://jitpack.io/v/mgsx-dev/gdx-gltf.svg)](https://jitpack.io/#mgsx-dev/gdx-gltf) [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/mgsx-dev/gdx-gltf?include_prereleases&sort=semver)](https://github.com/mgsx-dev/gdx-gltf/releases)
