@@ -34,8 +34,12 @@ public class WeightVector {
 	}
 
 	public void lerp(WeightVector value, float t) {
-		if(count != value.count) throw new GdxRuntimeException("WeightVector count mismatch");
-		for(int i=0 ; i<count ; i++){
+		// if(count != value.count) throw new GdxRuntimeException("WeightVector count mismatch");
+		if (count != value.count) System.err.println("WeightVector count mismatch: %d != %d".formatted(count, value.count));
+
+		// clamp value, avoid crash
+		final int cnt = Math.min(count, value.count);
+		for(int i=0 ; i<cnt ; i++){
 			values[i] = MathUtils.lerp(values[i], value.values[i], t);
 		}
 	}
