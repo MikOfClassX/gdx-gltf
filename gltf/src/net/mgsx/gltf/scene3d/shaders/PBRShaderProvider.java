@@ -205,6 +205,9 @@ public class PBRShaderProvider extends DefaultShaderProvider
 			
 			prefix += "#define unlitFlag\n";
 			
+			if(renderable.environment.has(ClippingPlaneAttribute.Type)){
+				prefix += "#define clippingPlaneFlag\n";
+			}
 		}else{
 			
 			if(renderable.material.has(PBRTextureAttribute.MetallicRoughnessTexture)){
