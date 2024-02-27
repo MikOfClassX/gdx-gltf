@@ -16,7 +16,7 @@ This fork is based on the valuable original GDX-GLTF with the aim to:
 * Fix of resource leaks
 * New support for dynamic normal textures
 * Fix for unreleased streams
-* Support for GLTF 2.0 sparse accessors (thanks to [nullEuro](https://github.com/nullEuro) !)
+* Support for GLTF 2.0 sparse accessors (thanks to [nullEuro](https://github.com/nullEuro) !) [recently incorporated into the mainstream]
 * Fix clipping plane missing with unlit materials
 * (more to come: feel free to PR!)
 
