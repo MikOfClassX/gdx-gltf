@@ -22,8 +22,8 @@ public class WeightVector {
 	}
 
 	public WeightVector set(WeightVector weights) {
-		if(weights.count > values.length){
-			values = new float[weights.count];
+		if(weights.values.length > values.length){
+			values = new float[weights.values.length];
 		}
 			// throw new GdxRuntimeException("WeightVector out of bound");
 		this.count = weights.count;
