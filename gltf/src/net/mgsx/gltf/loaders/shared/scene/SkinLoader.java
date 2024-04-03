@@ -2,6 +2,7 @@ package net.mgsx.gltf.loaders.shared.scene;
 
 import java.nio.FloatBuffer;
 
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.model.NodePart;
 import com.badlogic.gdx.math.Matrix4;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.utils.ArrayMap;
 import net.mgsx.gltf.data.scene.GLTFNode;
 import net.mgsx.gltf.data.scene.GLTFSkin;
 import net.mgsx.gltf.loaders.exceptions.GLTFIllegalException;
+import net.mgsx.gltf.loaders.shared.*;
 import net.mgsx.gltf.loaders.shared.data.DataResolver;
 
 public class SkinLoader {
@@ -45,8 +47,11 @@ public class SkinLoader {
 		Array<Integer> joints = new Array<Integer>();
 		
 		// respect api: zero to load all the model bones
-		if(maxSupportedBones > 0) {
-			joints.addAll(glSkin.joints, 0, Math.min(glSkin.joints.size, maxSupportedBones));	
+		if(maxSupportedBones > 0 && glSkin.joints.size > maxSupportedBones) {
+			joints.addAll(glSkin.joints, 0, maxSupportedBones);
+			
+			// log error
+			Gdx.app.error(GLTFLoaderBase.TAG, "bones clamped from %d to %d of node %s".formatted(glSkin.joints.size, maxSupportedBones, glNode.name));
 		}
 		else {
 			joints.addAll(glSkin.joints);
