@@ -18,6 +18,7 @@ This fork is based on the valuable original GDX-GLTF with the aim to:
 * Fix for unreleased streams
 * Support for GLTF 2.0 sparse accessors (thanks to [nullEuro](https://github.com/nullEuro) !) [recently incorporated into the mainstream]
 * Fix clipping plane missing with unlit materials
+* Fix GLTF model loading with "too many bones"
 * (more to come: feel free to PR!)
 
 # Help wanted : open to contributors
