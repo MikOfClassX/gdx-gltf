@@ -14,6 +14,16 @@ import net.mgsx.gltf.loaders.exceptions.GLTFIllegalException;
 import net.mgsx.gltf.loaders.shared.data.DataResolver;
 
 public class SkinLoader {
+	/** the n. of maximum supported bones */
+	private static int maxSupportedBones = 0;
+	
+	/**
+	 * Set the n. of maximum bones to load or zero to load all the model bones
+	 * @param maxSupportedBones the maxSupportedBones to set
+	 */
+	public static void setMaxSupportedBones (int maxSupportedBones) {
+		SkinLoader.maxSupportedBones = maxSupportedBones;
+	}
 	
 	private int maxBones;
 
@@ -34,7 +44,15 @@ public class SkinLoader {
 		Array<Matrix4> ibms = new Array<Matrix4>();
 		Array<Integer> joints = new Array<Integer>();
 		
-		int bonesCount = glSkin.joints.size;
+		// respect api: zero to load all the model bones
+		if(maxSupportedBones > 0) {
+			joints.addAll(glSkin.joints, 0, Math.min(glSkin.joints.size, maxSupportedBones));	
+		}
+		else {
+			joints.addAll(glSkin.joints);
+		}
+		
+		int bonesCount = joints.size;
 		maxBones = Math.max(maxBones, bonesCount);
 		
 		FloatBuffer floatBuffer = dataResolver.getBufferFloat(glSkin.inverseBindMatrices);
@@ -44,7 +62,6 @@ public class SkinLoader {
 			floatBuffer.get(matrixData);
 			ibms.add(new Matrix4(matrixData));
 		}
-		joints.addAll(glSkin.joints);
 		
 		if(ibms.size > 0){
 			for(int i=0 ; i<node.parts.size ; i++){
