@@ -246,7 +246,18 @@ void main() {
 #ifdef fogEquationFlag
     float fog = (eyeDistance - u_fogEquation.x) / (u_fogEquation.y - u_fogEquation.x);
     fog = clamp(fog, 0.0, 1.0);
-    fog = pow(fog, u_fogEquation.z);
+    
+    // ClassX: falloff option
+    #if defined(FOG_FALLOFF_LINEAR)
+    	fog = fog;
+	#if defined(FOG_FALLOFF_QUADRATIC)
+    	fog = fog * fog;
+	#elif defined(FOG_FALLOFF_INVERSE_QUADRATIC) 
+    	fog = sqrt(fog);
+	#else
+		// old mode
+		fog = pow(fog, u_fogEquation.z);
+    #endif
 #else
 	float fog = min(1.0, eyeDistance * eyeDistance * u_cameraPosition.w);
 #endif
