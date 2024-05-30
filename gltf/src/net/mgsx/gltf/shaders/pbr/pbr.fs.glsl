@@ -250,7 +250,7 @@ void main() {
     // ClassX: falloff option
     #if defined(FOG_FALLOFF_LINEAR)
     	fog = fog;
-	#if defined(FOG_FALLOFF_QUADRATIC)
+	#elif defined(FOG_FALLOFF_QUADRATIC)
     	fog = fog * fog;
 	#elif defined(FOG_FALLOFF_INVERSE_QUADRATIC) 
     	fog = sqrt(fog);
