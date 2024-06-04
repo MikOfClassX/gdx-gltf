@@ -1,10 +1,31 @@
-attribute vec3 a_position;
-uniform mat4 u_projViewTrans;
+// Compatibility copied from PBR shader compat.vs.glsl
+
+// required to have same precision in both shader for light structure
+#ifdef GL_ES
+#define LOWP lowp
+#define MED mediump
+#define HIGH highp
+precision highp float;
+#else
+#define MED
+#define LOWP
+#define HIGH
+#endif
+
+#ifdef GLSL3
+#define attribute in
+#define varying out
+#endif
+
+attribute vec4 a_position;
+
+varying vec3 v_dir;
+
 uniform mat4 u_worldTrans;
-varying vec3 v_position;
 
 void main() {
-	v_position = a_position.xyz;
-	vec4 pos = u_worldTrans * vec4(a_position, 1.0);
-	gl_Position = u_projViewTrans * pos;
+
+	v_dir = (u_worldTrans * a_position).xyz;
+
+	gl_Position = vec4(a_position.xy, 1.0, 1.0);
 }
