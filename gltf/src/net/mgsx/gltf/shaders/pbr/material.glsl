@@ -213,6 +213,13 @@ vec4 getBaseColor()
 #ifdef colorFlag
     baseColor *= v_color;
 #endif
+
+#ifdef blendedFlag
+#ifdef ALPHA_PREMULTIPLY
+	baseColor.rgb *= u_opacity;
+#endif
+#endif
+
     return baseColor;
 }
 
