@@ -407,6 +407,15 @@ public class PBRShader extends DefaultShader
 			shader.set(inputID, unit);
 		}
 	};
+	public final static Uniform specularMirrorBlurTextureUniform = new Uniform("u_mirrorSpecularBlurSampler", MirrorSourceAttribute.Type);
+	public final static Setter specularMirrorBlurTextureSetter = new LocalSetter() {
+		@Override
+		public void set (BaseShader shader, int inputID, Renderable renderable, Attributes combinedAttributes) {
+			final int unit = shader.context.textureBinder.bind(((MirrorSourceAttribute)(combinedAttributes
+				.get(MirrorSourceAttribute.Type))).textureBlurDescription);
+			shader.set(inputID, unit);
+		}
+	};
 	public final static Uniform specularMirrorMipmapUniform = new Uniform("u_mirrorMipmapScale");
 	public final static Setter specularMirrorMipmapSetter = new LocalSetter() {
 		@Override
@@ -524,6 +533,7 @@ public class PBRShader extends DefaultShader
 	public int u_transmissionSourceMipmap;
 
 	public int u_specularMirrorSampler;
+	public int u_specularMirrorBlurSampler;
 	public int u_specularMirrorMipmapScale;
 	public int u_specularMirrorNormal;
 
@@ -616,6 +626,7 @@ public class PBRShader extends DefaultShader
 		
 		// specular mirror
 		u_specularMirrorSampler = register(specularMirrorTextureUniform, specularMirrorTextureSetter);
+		u_specularMirrorBlurSampler = register(specularMirrorBlurTextureUniform, specularMirrorBlurTextureSetter);
 		u_specularMirrorMipmapScale = register(specularMirrorMipmapUniform, specularMirrorMipmapSetter);
 		u_specularMirrorNormal = register(mirrorNormal, mirrorNormalSetter);
 		

@@ -23,6 +23,11 @@ uniform float u_mipmapScale; // = 9.0 for resolution of 512x512
 uniform sampler2D u_mirrorSpecularSampler;
 uniform float u_mirrorMipmapScale;
 uniform vec3 u_mirrorNormal;
+
+#ifdef ACCURATE_MIRROR
+uniform sampler2D u_mirrorSpecularBlurSampler;
+#endif 
+
 #endif
 
 uniform vec2 u_viewportInv;
@@ -30,6 +35,53 @@ uniform vec2 u_viewportInv;
 // Calculation of the lighting contribution from an optional Image Based Light source.
 // Precomputed Environment Maps are required uniform inputs and are computed as outlined in [1].
 // See our README.md on Environment Maps [3] for additional discussion.
+
+// map
+float map(float value, float min1, float max1, float min2, float max2)
+{
+	// 0% - min1, 100% - max1
+	float perc = (value - min1) / (max1 - min1);
+	
+	// Do the same operation backwards with min2 and max2
+	return  perc * (max2 - min2) + min2;
+}
+
+// from https://www.shadertoy.com/view/Xltfzj
+vec4 blurTexture(sampler2D textureToBlur, vec2 fragCoord, float factor)
+{
+	vec2 texSize = textureSize(textureToBlur, 0);
+	 
+	float Pi = 6.28318530718; // Pi*2
+    
+    // GAUSSIAN BLUR SETTINGS {{{
+    float Directions = 16.0; // BLUR DIRECTIONS (Default 16.0 - More is better but slower)
+    float Quality = 4.0; // BLUR QUALITY (Default 4.0 - More is better but slower)
+    // float Size = 8.0; // BLUR SIZE (Radius)
+    // GAUSSIAN BLUR SETTINGS }}}
+        
+    float Size = map(factor, 0.0, 1.0, 0.0, 50);
+   
+    vec2 Radius = Size / texSize;
+    
+    // Normalized pixel coordinates (from 0 to 1)
+    vec2 uv = fragCoord;
+    
+    // Pixel colour
+    vec3 Color = texture2D(textureToBlur, uv).rgb;
+       
+    // Blur calculations
+    for (float d = 0.0; d < Pi; d += Pi / Directions)
+    {
+		for (float i = 1.0 / Quality; i <= 1.0; i += 1.0 / Quality)
+        {
+			Color += texture2D(textureToBlur, uv + vec2(cos(d), sin(d)) * Radius * i).rgb;		
+        }
+    }
+    
+    // Output to screen
+    Color /= Quality * Directions;// - 15.0;
+    return vec4(Color, 1.0);
+}
 
 vec2 sampleBRDF(PBRSurfaceInfo pbrSurface)
 {
@@ -55,6 +107,11 @@ vec3 getTransmissionSample(vec2 fragCoord, float roughness)
     return transmittedLight;
 }
 
+vec3 getTransmissionSampleAccurate(vec2 fragCoord, float roughness)
+{	
+	roughness = applyIorToRoughness(roughness);
+	return tsSRGBtoLINEAR(blurTexture(u_transmissionSourceSampler, fragCoord, roughness)).rgb;
+}
 
 vec3 getIBLTransmissionContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 v, vec2 brdf)
 {
@@ -73,8 +130,12 @@ vec3 getIBLTransmissionContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 v, v
     refractionCoords /= 2.0;
 
     // Sample framebuffer to get pixel the refracted ray hits.
-    vec3 transmittedLight = getTransmissionSample(refractionCoords, pbrSurface.perceptualRoughness);
-
+    #ifdef ACCURATE_TRANSMISSION
+    	vec3 transmittedLight = getTransmissionSampleAccurate(refractionCoords, pbrSurface.perceptualRoughness);
+    #else
+    	vec3 transmittedLight = getTransmissionSample(refractionCoords, pbrSurface.perceptualRoughness);
+    #endif
+    
 #ifdef volumeFlag
     transmittedLight = applyVolumeAttenuation(transmittedLight, length(transmissionRay), pbrSurface);
 #endif
@@ -152,7 +213,15 @@ PBRLightContribs getIBLContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 refl
 	mirrorCoord += p / 2.0;
 	mirrorCoord.x = 1.0 - mirrorCoord.x;
 
-    vec3 specularLight = msSRGBtoLINEAR(texture2DLodEXT(u_mirrorSpecularSampler, mirrorCoord, lod)).rgb;
+    #ifdef ACCURATE_MIRROR
+    	vec4 mirror = texture2D(u_mirrorSpecularSampler, mirrorCoord);
+    	vec4 blurMirror = texture2D(u_mirrorSpecularBlurSampler, mirrorCoord);    	
+    	
+    	float factor = smoothstep(.0, .40, pbrSurface.perceptualRoughness);
+    	vec3 specularLight = msSRGBtoLINEAR(mix(mirror, blurMirror, factor)).rgb;
+    #else
+    	vec3 specularLight = msSRGBtoLINEAR(texture2DLodEXT(u_mirrorSpecularSampler, mirrorCoord, lod)).rgb;
+    #endif   
 
 #else
 

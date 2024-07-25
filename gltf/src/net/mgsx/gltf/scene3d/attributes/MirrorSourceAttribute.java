@@ -12,6 +12,7 @@ public class MirrorSourceAttribute extends Attribute
 	public static final long Type = register(TypeAlias);
 	
 	public final TextureDescriptor<Texture> textureDescription = new TextureDescriptor<Texture>();
+	public final TextureDescriptor<Texture> textureBlurDescription = new TextureDescriptor<Texture>();
 	public final Vector3 normal = new Vector3();
 	
 	public MirrorSourceAttribute() {
@@ -24,6 +25,8 @@ public class MirrorSourceAttribute extends Attribute
 		MirrorSourceAttribute other = (MirrorSourceAttribute)o;
 		final int c = textureDescription.compareTo(other.textureDescription);
 		if (c != 0) return c;
+		final int c2 = textureBlurDescription.compareTo(other.textureBlurDescription);
+		if (c2 != 0) return c2;
 		Vector3 otherNormal = other.normal;
 		if(!MathUtils.isEqual(normal.x, otherNormal.x)) return normal.x < otherNormal.x ? -1 : 1;
 		if(!MathUtils.isEqual(normal.y, otherNormal.y)) return normal.y < otherNormal.y ? -1 : 1;
@@ -33,13 +36,19 @@ public class MirrorSourceAttribute extends Attribute
 
 	@Override
 	public Attribute copy() {
-		return set(textureDescription, normal);
+		return set(textureDescription, textureBlurDescription, normal);
 	}
 
+	public MirrorSourceAttribute set(TextureDescriptor<Texture> textureDescription, TextureDescriptor<Texture> textureBlurDescription, Vector3 normal) {
+		this.textureDescription.set(textureDescription);
+		this.textureBlurDescription.set(textureBlurDescription);
+		this.normal.set(normal);
+		return this;
+	}
+	
 	public MirrorSourceAttribute set(TextureDescriptor<Texture> textureDescription, Vector3 normal) {
 		this.textureDescription.set(textureDescription);
 		this.normal.set(normal);
 		return this;
 	}
-
 }
