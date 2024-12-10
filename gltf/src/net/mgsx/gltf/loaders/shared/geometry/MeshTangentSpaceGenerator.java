@@ -134,9 +134,9 @@ public class MeshTangentSpaceGenerator {
 		
 		Vector3 vu = new Vector3();
 		Vector3 vv = new Vector3();
-		Vector3[] tan1 = new Vector3[indices.length];
-		Vector3[] tan2 = new Vector3[indices.length];
-		for(int i=0 ; i<indices.length ; i++) {
+		Vector3[] tan1 = new Vector3[vertexCount];
+		Vector3[] tan2 = new Vector3[vertexCount];
+		for(int i=0 ; i<vertexCount ; i++) {
 			tan1[i] = new Vector3();
 			tan2[i] = new Vector3();
 		}
