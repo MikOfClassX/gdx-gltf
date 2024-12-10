@@ -1,5 +1,6 @@
 package net.mgsx.gltf.loaders.shared.geometry;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -143,17 +144,29 @@ public class MeshTangentSpaceGenerator {
 		
 		for(int index = 0, count = indices.length ; index<count ; ){
 			
-			int vIndexA = indices[index++] & 0xFFFF;
+			int idxA = index++;
+			int idxB = index++;
+			int idxC = index++;
+			
+			if(idxA >= count || idxB >= count || idxC >= count) {
+				String err = String.format("Index out of bounds: A=%d, B=%d, C=%d, indexCount=%d", idxA, idxB, idxC, count);
+				Gdx.app.error("GLTF", err);
+				
+				// skip
+				continue;
+			}
+			
+			int vIndexA = indices[idxA] & 0xFFFF;
 			float ax = vertices[vIndexA * stride + posOffset];
 			float ay = vertices[vIndexA * stride + posOffset+1];
 			float az = vertices[vIndexA * stride + posOffset+2];
 			
-			int vIndexB = indices[index++] & 0xFFFF;
+			int vIndexB = indices[idxB] & 0xFFFF;
 			float bx = vertices[vIndexB * stride + posOffset];
 			float by = vertices[vIndexB * stride + posOffset+1];
 			float bz = vertices[vIndexB * stride + posOffset+2];
 			
-			int vIndexC = indices[index++] & 0xFFFF;
+			int vIndexC = indices[idxC] & 0xFFFF;
 			float cx = vertices[vIndexC * stride + posOffset];
 			float cy = vertices[vIndexC * stride + posOffset+1];
 			float cz = vertices[vIndexC * stride + posOffset+2];
