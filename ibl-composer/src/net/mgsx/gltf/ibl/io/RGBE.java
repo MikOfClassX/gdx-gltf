@@ -18,12 +18,12 @@ import java.util.regex.Pattern;
  * writing is implemented.  Each routine does error checking and will return
  * a status value as defined below.  This code is intended as a skeleton so
  * feel free to modify it to suit your needs. <P>
- * <p/>
+ * <p>
  * Ported to Java and restructured by Kenneth Russell. <BR>
  * posted to http://www.graphics.cornell.edu/~bjw/ <BR>
  * written by Bruce Walter  (bjw@graphics.cornell.edu)  5/26/95 <BR>
  * based on code written by Greg Ward <BR>
- * <p/>
+ * <p>
  * Source: https://java.net/projects/jogl-demos/sources/svn/content/trunk/src/demos/hdr/RGBE.java
  */
 public class RGBE {
