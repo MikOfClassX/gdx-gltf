@@ -119,6 +119,7 @@ class MeshSpliter {
 		
 		for(int i=0 ; i<=maxGroup ; i++){
 			IntArray group = groups.get(i);
+			if(group == null) group = new IntArray();
 			short[] shortIndices = new short[group.size];
 			for(int j=0 ; j<group.size ; j++){
 				int index = group.get(j);
