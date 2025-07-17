@@ -126,6 +126,12 @@ varying vec3 v_csmUVs[numCSM];
 #endif
 #endif //shadowMapFlag
 
+#ifdef textureFlag
+attribute vec2 a_texCoord0;
+varying vec2 v_texCoord0;
+uniform mat3 u_texCoord0Transform;
+#endif // textureFlag
+
 void main() {
 	vec3 morph_pos = a_position;	
 	vec4 pos = u_worldTrans * vec4(morph_pos, 1.0);
@@ -134,6 +140,10 @@ void main() {
 	gl_Position = u_projViewTrans * pos;
 	
 	var_position = (u_viewTrans * vec4(pos.xyz, 1.0)).xyz;
+	
+	#ifdef textureFlag
+		v_texCoord0 = (u_texCoord0Transform * vec3(a_texCoord0, 1.0)).xy;
+	#endif
 	
 	#ifdef shadowMapFlag
 		vec4 spos = u_shadowMapProjViewTrans * pos;
