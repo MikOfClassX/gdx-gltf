@@ -2,12 +2,8 @@ package net.mgsx.gltf.scene3d.scene;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Cubemap;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -64,6 +60,8 @@ public class SceneSkybox implements RenderableProvider, Updatable, Disposable {
 
 	private ShaderProvider shaderProvider;
 	private boolean ownShaderProvider;
+	
+	private PerspectiveCamera perspectiveCam = new PerspectiveCamera();
 	
 	/**
 	 * Create a sky box with a default shader.
@@ -238,7 +236,21 @@ public class SceneSkybox implements RenderableProvider, Updatable, Disposable {
 		if(a != null) {
 			directionInverse.mul(envRotationInverse.set(a.matrix).tra());
 		}
-		quad.worldTransform.set(camera.projection).mul(directionInverse).inv();
+		
+		// note: the camera projection matrix may not be in perspective mode (e.g. offaxis projection)
+		if(camera instanceof PerspectiveCamera perspectiveCam) {
+			this.perspectiveCam.viewportWidth = perspectiveCam.viewportWidth;
+			this.perspectiveCam.viewportHeight= perspectiveCam.viewportHeight;
+			this.perspectiveCam.near = perspectiveCam.near;
+			this.perspectiveCam.far = perspectiveCam.far;
+			this.perspectiveCam.fieldOfView = perspectiveCam.fieldOfView;
+			this.perspectiveCam.update(false);
+			
+			quad.worldTransform.set(this.perspectiveCam.projection).mul(directionInverse).inv();
+		}
+		else
+			quad.worldTransform.set(camera.projection).mul(directionInverse).inv();
+
 	}
 	
 	@Override
