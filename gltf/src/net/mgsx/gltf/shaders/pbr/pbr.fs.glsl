@@ -143,6 +143,7 @@ void main() {
     vec3 f_diffuse = vec3(0.0);
     vec3 f_specular = vec3(0.0);
     vec3 f_transmission = vec3(0.0);
+    float specularAlpha = 1.0;
 
     // Calculate lighting contribution from image based lighting source (IBL)
 
@@ -152,12 +153,14 @@ void main() {
     f_specular += contribIBL.specular * u_ambientLight;
     f_transmission += contribIBL.transmission * u_ambientLight;
     vec3 ambientColor = vec3(0.0, 0.0, 0.0);
+    specularAlpha = contribIBL.specularAlpha;
 #elif defined(USE_IBL)
     PBRLightContribs contribIBL = getIBLContribution(pbrSurface, n, reflection);
     f_diffuse += contribIBL.diffuse;
     f_specular += contribIBL.specular;
     f_transmission += contribIBL.transmission;
     vec3 ambientColor = vec3(0.0, 0.0, 0.0);
+    specularAlpha = contribIBL.specularAlpha;
 #elif defined(ambientLightFlag)
     vec3 ambientColor = u_ambientLight;
 #else
@@ -266,7 +269,7 @@ void main() {
 
     // Blending and Alpha Test
 #ifdef blendedFlag
-	out_FragColor.a = baseColor.a * u_opacity;
+	out_FragColor.a = specularAlpha * baseColor.a * u_opacity;
 	#ifdef alphaTestFlag
 		if (out_FragColor.a <= u_alphaTest)
 			discard;

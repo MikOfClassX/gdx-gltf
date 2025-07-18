@@ -194,6 +194,8 @@ vec3 getIBLTransmissionContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 v, v
 PBRLightContribs getIBLContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 reflection)
 {
 	vec2 brdf = sampleBRDF(pbrSurface);
+	
+	float specularAlpha = 1.0;
 
 #ifdef ENV_ROTATION
 	vec3 diffuseDirection = u_envRotation * n;
@@ -218,9 +220,14 @@ PBRLightContribs getIBLContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 refl
     	vec4 blurMirror = texture2D(u_mirrorSpecularBlurSampler, mirrorCoord);    	
     	
     	float factor = smoothstep(.0, .40, pbrSurface.perceptualRoughness);
-    	vec3 specularLight = msSRGBtoLINEAR(mix(mirror, blurMirror, factor)).rgb;
+    	vec4 mirror = msSRGBtoLINEAR(mix(mirror, blurMirror, factor));
+    	
+    	vec3 specularLight = mirror.rgb;
+    	specularAlpha = mirror.a;
     #else
-    	vec3 specularLight = msSRGBtoLINEAR(texture2DLodEXT(u_mirrorSpecularSampler, mirrorCoord, lod)).rgb;
+    	vec4 mirror = msSRGBtoLINEAR(texture2DLodEXT(u_mirrorSpecularSampler, mirrorCoord, lod));
+    	vec3 specularLight = mirror.rgb;
+    	specularAlpha = mirror.a;
     #endif   
 
 #else
@@ -276,5 +283,5 @@ PBRLightContribs getIBLContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 refl
     vec3 transmission = vec3(0.0);
 #endif
 
-    return PBRLightContribs(diffuse, specular, transmission);
+    return PBRLightContribs(diffuse, specular, transmission, specularAlpha);
 }

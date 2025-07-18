@@ -44,6 +44,7 @@ struct PBRLightContribs
 	vec3 diffuse;
 	vec3 specular;
 	vec3 transmission;
+	float specularAlpha;
 };
 
 
@@ -225,7 +226,7 @@ PBRLightContribs getLightContribution(PBRSurfaceInfo pbrSurface, vec3 l, vec3 co
 #endif
 
 
-	return PBRLightContribs(diffuseContrib * factor, specContrib * factor, transmittedLight * factor);
+	return PBRLightContribs(diffuseContrib * factor, specContrib * factor, transmittedLight * factor, 1.0);
 }
 
 #if numDirectionalLights > 0
