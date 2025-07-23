@@ -220,7 +220,7 @@ PBRLightContribs getIBLContribution(PBRSurfaceInfo pbrSurface, vec3 n, vec3 refl
     	vec4 blurMirror = texture2D(u_mirrorSpecularBlurSampler, mirrorCoord);    	
     	
     	float factor = smoothstep(.0, .40, pbrSurface.perceptualRoughness);
-    	vec4 mirror = msSRGBtoLINEAR(mix(mirror, blurMirror, factor));
+    	mirror = msSRGBtoLINEAR(mix(mirror, blurMirror, factor));
     	
     	vec3 specularLight = mirror.rgb;
     	specularAlpha = mirror.a;
