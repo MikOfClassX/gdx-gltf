@@ -174,6 +174,7 @@ public class MeshLoader {
 					}
 					else if(attributeName.startsWith("_")){
 						Gdx.app.error("GLTF", "skip unsupported custom attribute: " + attributeName);
+						rawAttribute = false;
 					}else{
 						throw new GLTFIllegalException("illegal attribute type " + attributeName);
 					}
