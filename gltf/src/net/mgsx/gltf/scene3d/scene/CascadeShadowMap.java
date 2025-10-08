@@ -95,6 +95,8 @@ public class CascadeShadowMap implements Disposable {
 			throw new IllegalArgumentException("Invalid splitRates, expected " + (cascadeCount+2) + " items.");
 		}
 		
+		base.direction.nor();
+		
 		syncExtraCascades(base);
 			
 		setBaseLightBounds(base, sceneCamera, minLlightDepth);
