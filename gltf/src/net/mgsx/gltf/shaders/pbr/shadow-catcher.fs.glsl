@@ -12,6 +12,10 @@ varying vec3 var_position;
 
 uniform mat4 u_viewTrans;
 
+#ifdef GDX_COLOR_LOCATION
+layout(location = GDX_COLOR_LOCATION) out vec4 out_gdxColor;
+#endif
+
 #ifdef POSITION_LOCATION
 layout(location = POSITION_LOCATION) out vec3 out_position;
 #endif
@@ -34,6 +38,15 @@ void main() {
 #ifdef shadowMapFlag
 	out_FragColor = vec4(0.0, 0.0, 0.0, getBaseColor().a * (1.0 - getShadow()));
 #endif
+ 
+#ifdef GDX_COLOR_LOCATION
+#ifdef shadowMapFlag
+    out_gdxColor = out_FragColor;
+#else
+    out_gdxColor = vec4(.0,.0,.0,.0);
+#endif
+#endif	
+	
 	applyClippingPlane();
 	
 }
