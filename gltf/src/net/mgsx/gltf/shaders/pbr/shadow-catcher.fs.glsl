@@ -17,7 +17,7 @@ layout(location = GDX_COLOR_LOCATION) out vec4 out_gdxColor;
 #endif
 
 #ifdef POSITION_LOCATION
-layout(location = POSITION_LOCATION) out vec3 out_position;
+layout(location = POSITION_LOCATION) out vec4 out_position;
 #endif
 
 #ifdef NORMAL_LOCATION
@@ -27,7 +27,8 @@ layout(location = NORMAL_LOCATION) out vec3 out_normals;
 void main() {
 
 #ifdef POSITION_LOCATION
-    out_position = var_position;
+    out_position.rgb = var_position.rgb;
+    out_position.a = 1.0;
 #endif
 
 #ifdef NORMAL_LOCATION
