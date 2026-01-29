@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.PointLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.SpotLightsAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.*;
+import com.badlogic.gdx.utils.*;
 
 public class EnvironmentUtil 
 {
@@ -50,4 +52,16 @@ public class EnvironmentUtil
 		if(sla != null) count += sla.lights.size;
 		return count;
 	}
+	
+	public static Array<BaseLight> getLights(Environment environment, Array<BaseLight> outLights){
+		if(outLights == null) outLights = new Array<BaseLight>();
+		
+		DirectionalLightsAttribute dla = environment.get(DirectionalLightsAttribute.class, DirectionalLightsAttribute.Type);
+		if(dla != null) outLights.addAll(dla.lights);
+		PointLightsAttribute pla = environment.get(PointLightsAttribute.class, PointLightsAttribute.Type);
+		if(pla != null) outLights.addAll(pla.lights);
+		SpotLightsAttribute sla = environment.get(SpotLightsAttribute.class, SpotLightsAttribute.Type);
+		if(sla != null) outLights.addAll(sla.lights);
+		return outLights;
+	}	
 }
