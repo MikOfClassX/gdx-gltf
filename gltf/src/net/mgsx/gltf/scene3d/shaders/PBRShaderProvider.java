@@ -43,6 +43,9 @@ public class PBRShaderProvider extends DefaultShaderProvider
 {
 	public static final String TAG = "PBRShader";
 	
+	// true to enable lights log (number of lights in scene vs max supported)
+	private static final boolean ENABLE_LIGHTS_LOG = false;
+	
 	private final LightsInfo lightsInfo = new LightsInfo();
 	
 	private static String defaultVertexShader = null;
@@ -480,7 +483,7 @@ public class PBRShaderProvider extends DefaultShaderProvider
 			Gdx.app.error(TAG, "more than " + config.numVertexColors + " color attributes not supported: " + numColor + " found.");
 		}
 		
-		if(renderable.environment != null){
+		if(renderable.environment != null && ENABLE_LIGHTS_LOG){
 			LightUtils.getLightsInfo(lightsInfo, renderable.environment);
 			if(lightsInfo.dirLights > config.numDirectionalLights){
 				Gdx.app.error(TAG, "too many directional lights detected: " + lightsInfo.dirLights + "/" + config.numDirectionalLights);
