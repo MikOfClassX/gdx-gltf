@@ -17,7 +17,7 @@ layout(location = GDX_COLOR_LOCATION) out vec4 out_gdxColor;
 #endif
 
 #ifdef POSITION_LOCATION
-layout(location = POSITION_LOCATION) out vec4 out_position;
+layout(location = POSITION_LOCATION) out vec3 out_position;
 #endif
 
 #ifdef NORMAL_LOCATION
@@ -28,12 +28,12 @@ void main() {
 
 #ifdef POSITION_LOCATION
     out_position.rgb = var_position.rgb;
-    out_position.a = 1.0;
 #endif
 
 #ifdef NORMAL_LOCATION
 	vec3 n = getNormal();
-	out_normals = normalize((u_viewTrans * vec4(n.xyz, 0.0)).xyz);
+	//out_normals = normalize((u_viewTrans * vec4(n.xyz, 0.0)).xyz);
+	out_normals = normalize(mat3(u_viewTrans) * n.xyz);
 #endif
 
 #ifdef shadowMapFlag
